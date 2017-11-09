@@ -1,3 +1,7 @@
+# vscode-tslint-vue
+
+This is a fork of `vscode-tslint` made to work for .vue files.
+
 # vscode-tslint
 Integrates the [tslint](https://github.com/palantir/tslint) linter for the TypeScript language into VS Code.
 
