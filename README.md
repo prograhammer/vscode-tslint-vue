@@ -1,7 +1,10 @@
-# vscode-tslint
+# vscode-tslint-vue
+
+A fork of:
+
 ![Marketplace Version](http://vsmarketplacebadge.apphb.com/version/eg2.tslint.svg "Current Version") ![Market Place Installs](http://vsmarketplacebadge.apphb.com/installs/eg2.tslint.svg "Number of Installs")
 
-VSCode extension to support tslint
+VSCode extension to support tslint in .vue files.
 
 ## Development setup
 - run npm install inside the `tslint` and `tslint-server` folders
