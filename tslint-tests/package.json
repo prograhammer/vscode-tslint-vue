@@ -8,8 +8,7 @@
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "typescript": "^2.2.2",
     "tslint": "^5.0.0"

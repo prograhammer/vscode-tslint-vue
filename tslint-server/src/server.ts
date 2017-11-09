@@ -17,6 +17,8 @@ import * as tslint from 'tslint'; // this is a dev dependency only
 import { Delayer } from './delayer';
 import { createVscFixForRuleFailure, TSLintAutofixEdit } from './fixer';
 
+import * as parse5 from 'parse5';
+
 // Settings as defined in VS Code
 interface Settings {
 	enable: boolean;
@@ -456,6 +458,9 @@ async function doValidate(conn: server.IConnection, library: any, document: serv
 	}
 
 	let contents = document.getText();
+
+	if (document.languageId === 'vue') contents = getVueContents(contents);
+
 	let configFile = settings.configFile || null;
 	let configuration: Configuration | undefined;
 
@@ -492,7 +497,7 @@ async function doValidate(conn: server.IConnection, library: any, document: serv
 		formattersDirectory: undefined
 	};
 
-	if (settings.trace && settings.trace.server === 'verbose') { 
+	if (settings.trace && settings.trace.server === 'verbose') {
 		traceConfigurationFile(configuration.linterConfiguration);
 	}
 
@@ -526,6 +531,40 @@ async function doValidate(conn: server.IConnection, library: any, document: serv
 	}
 	connection.sendNotification(StatusNotification.type, { state: Status.ok });
 	return diagnostics;
+}
+
+function getVueContents(contents: string): string {
+	const rootNode = parse5.parseFragment(contents, { locationInfo: true }) as parse5.AST.Default.DocumentFragment;
+	const vueNodes: parse5.AST.Node[] = rootNode.childNodes;
+
+	// Parse the .vue file tags and find the tag <script lang="ts">...</script>.
+	const vueScript = vueNodes.find((node: parse5.AST.Default.Element) => {
+		if (!('attrs' in node)) return false;  // <-- Some nodes/elements don't have attributes.
+
+		const isScript = node.nodeName === 'script';
+
+		const isTypeScript = node.attrs.find((attr: parse5.AST.Default.Attribute) => {
+			return attr.name === 'lang' && attr.value === 'ts'
+		}) !== undefined;
+
+		return isScript && isTypeScript;
+	}) as (parse5.AST.Default.Element & parse5.AST.Default.Node) | undefined;
+
+	// Replace everything above script tag with comments (pad the space above with comments).
+	if (vueScript !== undefined) {
+		const vueScriptContent = parse5.serialize(vueScript);
+		const vueScriptLocation = vueScript.__location === undefined ? 0 : vueScript.__location.line;
+
+		let vueScriptPadding = '';
+
+		for (let i = 1; i <= vueScriptLocation; i++) {
+			vueScriptPadding += '//' + (i === vueScriptLocation ? '' : '\r\n');
+		}
+
+		contents = vueScriptPadding + vueScriptContent;
+	}
+
+	return contents;
 }
 
 /**

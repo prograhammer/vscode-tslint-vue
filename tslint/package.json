@@ -1,22 +1,22 @@
 {
-  "name": "tslint",
-  "displayName": "TSLint",
-  "description": "TSLint for Visual Studio Code",
+  "name": "tslint-vue",
+  "displayName": "TSLint Vue",
+  "description": "TSLint for Visual Studio Code and VueJS",
   "version": "1.0.4",
   "author": "Microsoft Corporation",
   "license": "MIT",
-  "publisher": "eg2",
-  "icon": "TSLint_icon.png",
+  "publisher": "prograhammer",
+  "icon": "TSLintVue_icon.png",
   "galleryBanner": {
     "color": "#5c2d91",
     "theme": "dark"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Microsoft/vscode-tslint.git"
+    "url": "https://github.com/prograhammer/vscode-tslint-vue.git"
   },
   "bugs": {
-    "url": "https://github.com/Microsoft/vscode-tslint/issues"
+    "url": "https://github.com/prograhammer/vscode-tslint-vue/issues"
   },
   "categories": [
     "Languages",
@@ -28,6 +28,7 @@
   "activationEvents": [
     "onLanguage:typescript",
     "onLanguage:typescriptreact",
+    "onLanguage:vue",
     "onLanguage:javascript",
     "onLanguage:javascriptreact",
     "onCommand:tslint.fixAllProblems",
@@ -127,17 +128,17 @@
           "description": "Always show rule failures as warnings, independent of the tslint configuration.",
           "scope": "resource"
         },
-				"tslint.trace.server": {
-					"scope": "window",
-					"type": "string",
-					"enum": [
-						"off",
-						"messages",
-						"verbose"
-					],
-					"default": "off",
-					"description": "Traces the communication between VSCode and the tslint linter service."
-				}
+        "tslint.trace.server": {
+          "scope": "window",
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "description": "Traces the communication between VSCode and the tslint linter service."
+        }
       }
     },
     "colors": [
@@ -231,13 +232,14 @@
     "update-vscode": "node ./node_modules/vscode/bin/install"
   },
   "devDependencies": {
-    "typescript": "^2.4.2",
-    "vscode": "^1.1.5",
+    "@types/mocha": "^2.2.32",
     "@types/node": "^6.0.40",
-    "@types/mocha": "^2.2.32"
+    "parse5": "^3.0.2",
+    "typescript": "^2.4.2",
+    "vscode": "^1.1.5"
   },
   "dependencies": {
-    "vscode-languageclient": "^3.4.0",
+    "vscode-languageclient": "3.4.0",
     "open": "^0.0.5"
   }
 }

@@ -63,6 +63,8 @@ export function activate(context: ExtensionContext) {
 	let errorColor = new ThemeColor('tslint.error');
 	let warningColor = new ThemeColor('tslint.warning');
 
+	console.log('Congratulations, the extension is working!');
+
 	function showStatusBarItem(show: boolean): void {
 		if (show) {
 			statusBarItem.show();
@@ -91,7 +93,7 @@ export function activate(context: ExtensionContext) {
 	}
 
 	function isTypeScriptDocument(languageId) {
-		return languageId === 'typescript' || languageId === 'typescriptreact';
+		return languageId === 'typescript' || languageId === 'typescriptreact' || languageId === 'vue';
 	}
 
 	function isJavaScriptDocument(languageId) {
@@ -152,7 +154,7 @@ export function activate(context: ExtensionContext) {
 	};
 
 	let clientOptions: LanguageClientOptions = {
-		documentSelector: ['typescript', 'typescriptreact', 'javascript', 'javascriptreact'],
+		documentSelector: ['typescript', 'typescriptreact', 'vue', 'javascript', 'javascriptreact'],
 		synchronize: {
 			configurationSection: 'tslint',
 			fileEvents: workspace.createFileSystemWatcher('**/tslint.json')
