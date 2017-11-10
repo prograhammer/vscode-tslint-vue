@@ -1,245 +1,245 @@
 {
-  "name": "tslint-vue",
-  "displayName": "TSLint Vue",
-  "description": "TSLint for Visual Studio Code and VueJS",
-  "version": "1.0.4",
-  "author": "Microsoft Corporation",
-  "license": "MIT",
-  "publisher": "prograhammer",
-  "icon": "TSLintVue_icon.png",
-  "galleryBanner": {
-    "color": "#5c2d91",
-    "theme": "dark"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/prograhammer/vscode-tslint-vue.git"
-  },
-  "bugs": {
-    "url": "https://github.com/prograhammer/vscode-tslint-vue/issues"
-  },
-  "categories": [
-    "Languages",
-    "Linters"
-  ],
-  "engines": {
-    "vscode": "^1.16.0"
-  },
-  "activationEvents": [
-    "onLanguage:typescript",
-    "onLanguage:typescriptreact",
-    "onLanguage:vue",
-    "onLanguage:javascript",
-    "onLanguage:javascriptreact",
-    "onCommand:tslint.fixAllProblems",
-    "onCommand:tslint.createConfig",
-    "onCommand:tslint.showOutputChannel"
-  ],
-  "main": "./out/extension",
-  "contributes": {
-    "configuration": {
-      "type": "object",
-      "title": "TSLint",
-      "properties": {
-        "tslint.enable": {
-          "type": "boolean",
-          "default": true,
-          "description": "Control whether tslint is enabled for TypeScript files or not.",
-          "scope": "resource"
-        },
-        "tslint.jsEnable": {
-          "type": "boolean",
-          "default": false,
-          "description": "Control whether tslint is enabled for JavaScript files or not.",
-          "scope": "resource"
-        },
-        "tslint.rulesDirectory": {
-          "type": [
-            "string",
-            "array"
-          ],
-          "items": {
-            "type": "string"
-          },
-          "description": "An additional rules directory",
-          "default": "",
-          "scope": "resource"
-        },
-        "tslint.validateWithDefaultConfig": {
-          "type": "boolean",
-          "description": "Validate a file when there is only a default tslint configuration is found",
-          "default": false,
-          "scope": "resource"
-        },
-        "tslint.configFile": {
-          "type": "string",
-          "description": "The path to the rules configuration file",
-          "default": "",
-          "scope": "resource"
-        },
-        "tslint.ignoreDefinitionFiles": {
-          "type": "boolean",
-          "default": true,
-          "description": "Control if TypeScript definition files should be ignored",
-          "scope": "resource"
-        },
-        "tslint.exclude": {
-          "type": [
-            "string",
-            "array"
-          ],
-          "items": {
-            "type": "string"
-          },
-          "description": "Configure glob patterns of file paths to exclude from linting",
-          "scope": "resource"
-        },
-        "tslint.run": {
-          "type": "string",
-          "enum": [
-            "onSave",
-            "onType"
-          ],
-          "default": "onType",
-          "description": "Run the linter on save (onSave) or on type (onType)",
-          "scope": "resource"
-        },
-        "tslint.nodePath": {
-          "type": "string",
-          "default": "",
-          "description": "A path added to NODE_PATH when resolving the tslint module.",
-          "scope": "resource"
-        },
-        "tslint.autoFixOnSave": {
-          "type": [
-            "boolean",
-            "array"
-          ],
-          "items": {
-            "type": "string"
-          },
-          "default": false,
-          "description": "Turns auto fix on save on or off, or defines which rules (e.g. `no-var-keyword`) to auto fix on save.",
-          "scope": "resource"
-        },
-        "tslint.alwaysShowRuleFailuresAsWarnings": {
-          "type": "boolean",
-          "default": false,
-          "description": "Always show rule failures as warnings, independent of the tslint configuration.",
-          "scope": "resource"
-        },
-        "tslint.trace.server": {
-          "scope": "window",
-          "type": "string",
-          "enum": [
-            "off",
-            "messages",
-            "verbose"
-          ],
-          "default": "off",
-          "description": "Traces the communication between VSCode and the tslint linter service."
-        }
-      }
+    "name": "tslint-vue",
+    "displayName": "TSLint Vue",
+    "description": "TSLint for Visual Studio Code and VueJS",
+    "version": "1.0.5",
+    "author": "Microsoft Corporation",
+    "license": "MIT",
+    "publisher": "prograhammer",
+    "icon": "TSLintVue_icon.png",
+    "galleryBanner": {
+        "color": "#5c2d91",
+        "theme": "dark"
     },
-    "colors": [
-      {
-        "id": "tslint.error",
-        "description": "Color for tslint error message in the status bar.",
-        "defaults": {
-          "dark": "#ffff00",
-          "light": "#ffff00",
-          "highContrast": "#ffff00"
-        }
-      },
-      {
-        "id": "tslint.warning",
-        "description": "Color for tslint warning message in the status bar.",
-        "defaults": {
-          "dark": "#ffff00",
-          "light": "#ffff00",
-          "highContrast": "#ffff00"
-        }
-      }
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/prograhammer/vscode-tslint-vue.git"
+    },
+    "bugs": {
+        "url": "https://github.com/prograhammer/vscode-tslint-vue/issues"
+    },
+    "categories": [
+        "Languages",
+        "Linters"
     ],
-    "commands": [
-      {
-        "title": "Fix all auto-fixable problems",
-        "category": "TSLint",
-        "command": "tslint.fixAllProblems"
-      },
-      {
-        "title": "Create a 'tslint.json' file",
-        "category": "TSLint",
-        "command": "tslint.createConfig"
-      },
-      {
-        "title": "Show output",
-        "category": "TSLint",
-        "command": "tslint.showOutputChannel"
-      }
+    "engines": {
+        "vscode": "^1.16.0"
+    },
+    "activationEvents": [
+        "onLanguage:typescript",
+        "onLanguage:typescriptreact",
+        "onLanguage:vue",
+        "onLanguage:javascript",
+        "onLanguage:javascriptreact",
+        "onCommand:tslint.fixAllProblems",
+        "onCommand:tslint.createConfig",
+        "onCommand:tslint.showOutputChannel"
     ],
-    "jsonValidation": [
-      {
-        "fileMatch": "tslint.json",
-        "url": "http://json.schemastore.org/tslint"
-      }
-    ],
-    "problemPatterns": [
-      {
-        "name": "tslint4",
-        "regexp": "^(\\(\\S*\\)\\s+)?(\\S.*)\\[(\\d+), (\\d+)\\]:\\s+(.*)$",
-        "file": 2,
-        "line": 3,
-        "column": 4,
-        "message": 5
-      },
-      {
-        "name": "tslint5",
-        "regexp": "^(WARNING|ERROR):(\\s+\\(\\S*\\))?\\s+(\\S.*)\\[(\\d+), (\\d+)\\]:\\s+(.*)$",
-        "severity": 1,
-        "file": 3,
-        "line": 4,
-        "column": 5,
-        "message": 6
-      }
-    ],
-    "problemMatchers": [
-      {
-        "name": "tslint4",
-        "label": "tslint (version 4) warnings",
-        "owner": "tslint",
-        "applyTo": "closedDocuments",
-        "fileLocation": "absolute",
-        "severity": "warning",
-        "pattern": "$tslint4"
-      },
-      {
-        "name": "tslint5",
-        "owner": "tslint",
-        "label": "tslint (version 5) warnings",
-        "applyTo": "closedDocuments",
-        "fileLocation": "absolute",
-        "severity": "warning",
-        "pattern": "$tslint5"
-      }
-    ]
-  },
-  "scripts": {
-    "postinstall": "node ./node_modules/vscode/bin/install",
-    "vscode:prepublish": "cd ../tslint-server && npm run compile && cd ../tslint && tsc -p ./",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "update-vscode": "node ./node_modules/vscode/bin/install"
-  },
-  "devDependencies": {
-    "@types/mocha": "^2.2.32",
-    "@types/node": "^6.0.40",
-    "parse5": "^3.0.2",
-    "typescript": "^2.4.2",
-    "vscode": "^1.1.5"
-  },
-  "dependencies": {
-    "vscode-languageclient": "3.4.0",
-    "open": "^0.0.5"
-  }
+    "main": "./out/extension",
+    "contributes": {
+        "configuration": {
+            "type": "object",
+            "title": "TSLint",
+            "properties": {
+                "tslint.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Control whether tslint is enabled for TypeScript files or not.",
+                    "scope": "resource"
+                },
+                "tslint.jsEnable": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Control whether tslint is enabled for JavaScript files or not.",
+                    "scope": "resource"
+                },
+                "tslint.rulesDirectory": {
+                    "type": [
+                        "string",
+                        "array"
+                    ],
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "An additional rules directory",
+                    "default": "",
+                    "scope": "resource"
+                },
+                "tslint.validateWithDefaultConfig": {
+                    "type": "boolean",
+                    "description": "Validate a file when there is only a default tslint configuration is found",
+                    "default": false,
+                    "scope": "resource"
+                },
+                "tslint.configFile": {
+                    "type": "string",
+                    "description": "The path to the rules configuration file",
+                    "default": "",
+                    "scope": "resource"
+                },
+                "tslint.ignoreDefinitionFiles": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Control if TypeScript definition files should be ignored",
+                    "scope": "resource"
+                },
+                "tslint.exclude": {
+                    "type": [
+                        "string",
+                        "array"
+                    ],
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Configure glob patterns of file paths to exclude from linting",
+                    "scope": "resource"
+                },
+                "tslint.run": {
+                    "type": "string",
+                    "enum": [
+                        "onSave",
+                        "onType"
+                    ],
+                    "default": "onType",
+                    "description": "Run the linter on save (onSave) or on type (onType)",
+                    "scope": "resource"
+                },
+                "tslint.nodePath": {
+                    "type": "string",
+                    "default": "",
+                    "description": "A path added to NODE_PATH when resolving the tslint module.",
+                    "scope": "resource"
+                },
+                "tslint.autoFixOnSave": {
+                    "type": [
+                        "boolean",
+                        "array"
+                    ],
+                    "items": {
+                        "type": "string"
+                    },
+                    "default": false,
+                    "description": "Turns auto fix on save on or off, or defines which rules (e.g. `no-var-keyword`) to auto fix on save.",
+                    "scope": "resource"
+                },
+                "tslint.alwaysShowRuleFailuresAsWarnings": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Always show rule failures as warnings, independent of the tslint configuration.",
+                    "scope": "resource"
+                },
+                "tslint.trace.server": {
+                    "scope": "window",
+                    "type": "string",
+                    "enum": [
+                        "off",
+                        "messages",
+                        "verbose"
+                    ],
+                    "default": "off",
+                    "description": "Traces the communication between VSCode and the tslint linter service."
+                }
+            }
+        },
+        "colors": [
+            {
+                "id": "tslint.error",
+                "description": "Color for tslint error message in the status bar.",
+                "defaults": {
+                    "dark": "#ffff00",
+                    "light": "#ffff00",
+                    "highContrast": "#ffff00"
+                }
+            },
+            {
+                "id": "tslint.warning",
+                "description": "Color for tslint warning message in the status bar.",
+                "defaults": {
+                    "dark": "#ffff00",
+                    "light": "#ffff00",
+                    "highContrast": "#ffff00"
+                }
+            }
+        ],
+        "commands": [
+            {
+                "title": "Fix all auto-fixable problems",
+                "category": "TSLint",
+                "command": "tslint.fixAllProblems"
+            },
+            {
+                "title": "Create a 'tslint.json' file",
+                "category": "TSLint",
+                "command": "tslint.createConfig"
+            },
+            {
+                "title": "Show output",
+                "category": "TSLint",
+                "command": "tslint.showOutputChannel"
+            }
+        ],
+        "jsonValidation": [
+            {
+                "fileMatch": "tslint.json",
+                "url": "http://json.schemastore.org/tslint"
+            }
+        ],
+        "problemPatterns": [
+            {
+                "name": "tslint4",
+                "regexp": "^(\\(\\S*\\)\\s+)?(\\S.*)\\[(\\d+), (\\d+)\\]:\\s+(.*)$",
+                "file": 2,
+                "line": 3,
+                "column": 4,
+                "message": 5
+            },
+            {
+                "name": "tslint5",
+                "regexp": "^(WARNING|ERROR):(\\s+\\(\\S*\\))?\\s+(\\S.*)\\[(\\d+), (\\d+)\\]:\\s+(.*)$",
+                "severity": 1,
+                "file": 3,
+                "line": 4,
+                "column": 5,
+                "message": 6
+            }
+        ],
+        "problemMatchers": [
+            {
+                "name": "tslint4",
+                "label": "tslint (version 4) warnings",
+                "owner": "tslint",
+                "applyTo": "closedDocuments",
+                "fileLocation": "absolute",
+                "severity": "warning",
+                "pattern": "$tslint4"
+            },
+            {
+                "name": "tslint5",
+                "owner": "tslint",
+                "label": "tslint (version 5) warnings",
+                "applyTo": "closedDocuments",
+                "fileLocation": "absolute",
+                "severity": "warning",
+                "pattern": "$tslint5"
+            }
+        ]
+    },
+    "scripts": {
+        "postinstall": "node ./node_modules/vscode/bin/install",
+        "vscode:prepublish": "cd ../tslint-server && npm run compile && cd ../tslint && tsc -p ./",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "update-vscode": "node ./node_modules/vscode/bin/install"
+    },
+    "devDependencies": {
+        "@types/mocha": "^2.2.32",
+        "@types/node": "^6.0.40",
+        "parse5": "^3.0.2",
+        "typescript": "^2.4.2",
+        "vscode": "^1.1.5"
+    },
+    "dependencies": {
+        "vscode-languageclient": "3.4.0",
+        "open": "^0.0.5"
+    }
 }
