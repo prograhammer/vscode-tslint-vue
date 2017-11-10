@@ -1,10 +1,10 @@
 # vscode-tslint-vue
 
-A fork of:
+![Marketplace Version](http://vsmarketplacebadge.apphb.com/version/prograhammer.tslint-vue.svg "Current Version") ![Market Place Installs](http://vsmarketplacebadge.apphb.com/installs/prograhammer.tslint-vue.svg "Number of Installs")
 
-![Marketplace Version](http://vsmarketplacebadge.apphb.com/version/eg2.tslint.svg "Current Version") ![Market Place Installs](http://vsmarketplacebadge.apphb.com/installs/eg2.tslint.svg "Number of Installs")
-
-VSCode extension to support tslint in .vue files.
+VSCode extension to support tslint in .vue files. For linting to work, you need to ensure your script tag's language attribute is set
+to "ts": `<script lang="ts">...</script>`. This is a fork of [vscode-tslint](https://marketplace.visualstudio.com/items?itemName=eg2.tslint) made to work
+for .vue files (single file components).
 
 ## Development setup
 - run npm install inside the `tslint` and `tslint-server` folders

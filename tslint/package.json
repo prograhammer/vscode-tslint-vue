@@ -1,8 +1,8 @@
 {
     "name": "tslint-vue",
     "displayName": "TSLint Vue",
-    "description": "TSLint for Visual Studio Code and VueJS",
-    "version": "1.0.5",
+    "description": "TSLint for Vue.js",
+    "version": "1.0.6",
     "author": "Microsoft Corporation",
     "license": "MIT",
     "publisher": "prograhammer",
@@ -234,7 +234,6 @@
     "devDependencies": {
         "@types/mocha": "^2.2.32",
         "@types/node": "^6.0.40",
-        "parse5": "^3.0.2",
         "typescript": "^2.4.2",
         "vscode": "^1.1.5"
     },
