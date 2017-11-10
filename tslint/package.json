@@ -2,7 +2,7 @@
     "name": "tslint-vue",
     "displayName": "TSLint Vue",
     "description": "TSLint for Vue.js",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "author": "Microsoft Corporation",
     "license": "MIT",
     "publisher": "prograhammer",
