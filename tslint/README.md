@@ -1,8 +1,12 @@
 # vscode-tslint-vue
 
 For linting to work in *.vue* files, you need to ensure your script tag's language attribute is set
-to "ts": `<script lang="ts">...</script>`. This is a fork of
-[vscode-tslint](https://marketplace.visualstudio.com/items?itemName=eg2.tslint) made to work
+to "ts":
+```js
+     <script lang="ts">...</script>
+```
+This is a fork of
+[vscode-tslint](https://marketplace.visualstudio.com/items?itemName=eg2.tslint) that adds support
 for *.vue* files (single file components). You can read more about `vscode-tslint` below.
 
 # vscode-tslint
