@@ -42,4 +42,4 @@ to "ts": `<script lang="ts">...</script>`.
 ## Publishing to marketplace
 
 - Make sure you have `vsce` installed: `npm install -g vsce`.
-- To publish: `vsce publish`.
+- To publish (from the tslint directory): `vsce publish`.
