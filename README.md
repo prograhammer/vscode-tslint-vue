@@ -2,9 +2,26 @@
 
 ![Marketplace Version](http://vsmarketplacebadge.apphb.com/version/prograhammer.tslint-vue.svg "Current Version") ![Market Place Installs](http://vsmarketplacebadge.apphb.com/installs/prograhammer.tslint-vue.svg "Number of Installs")
 
-VSCode extension to support tslint in .vue files. For linting to work, you need to ensure your script tag's language attribute is set
-to "ts": `<script lang="ts">...</script>`. This is a fork of [vscode-tslint](https://marketplace.visualstudio.com/items?itemName=eg2.tslint) made to work
-for .vue files (single file components).
+VSCode extension for tslint with added support for .vue (single file component) files and compiler/typechecker level linting.
+
+1. For linting to work, you need to ensure your script tag's language attribute is set
+to "ts": `<script lang="ts">...</script>`.  
+2. You can turn on linting at the typechecker level by setting the `typeCheck` tslint option to `true` in your settings.json (File > Preferences > Settings - Workspace):
+
+```json
+// .vscode/settings.json
+{
+	// ...
+
+    "tslint.typeCheck": true, 
+
+	// ...
+}
+
+```
+*Also, make sure you have a `tsconfig.json` file located at the root of your current project/workspace for the typechecker linting to use.*  
+
+3.  This is a fork of [vscode-tslint](https://marketplace.visualstudio.com/items?itemName=eg2.tslint) so you can read more information from that repo.
 
 ## Development setup
 - run npm install inside the `tslint` and `tslint-server` folders
@@ -21,3 +38,8 @@ for .vue files (single file components).
 - run F5 to build and debug the extension
 
 > If you want to debug server and extension at the same time; 1st debug extension and then start server debugging
+
+## Publishing to marketplace
+
+- Make sure you have `vsce` installed: `npm install -g vsce`.
+- To publish: `vsce publish`.

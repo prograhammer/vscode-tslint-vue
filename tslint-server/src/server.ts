@@ -17,7 +17,8 @@ import * as tslint from 'tslint'; // this is a dev dependency only
 import { Delayer } from './delayer';
 import { createVscFixForRuleFailure, TSLintAutofixEdit } from './fixer';
 
-import * as parse5 from 'parse5';
+import * as vueParser from 'vue-parser';
+import * as ts from 'typescript';
 
 // Settings as defined in VS Code
 interface Settings {
@@ -33,6 +34,7 @@ interface Settings {
 	alwaysShowRuleFailuresAsWarnings: boolean;
 	autoFixOnSave: boolean | string[];
 	trace: any;
+	typeCheck: boolean;
 }
 
 interface Configuration {
@@ -368,6 +370,7 @@ async function validateTextDocument(connection: server.IConnection, document: se
 
 let connection: server.IConnection = server.createConnection(new server.IPCMessageReader(process), new server.IPCMessageWriter(process));
 let documents: server.TextDocuments = new server.TextDocuments();
+let workspacePath: string | null | undefined;
 
 documents.listen(connection);
 
@@ -376,6 +379,8 @@ function trace(message: string, verbose?: string): void {
 }
 
 connection.onInitialize((params) => {
+	workspacePath = params.rootPath;
+
 	function hasClientCapability(name: string) {
 		let keys = name.split('.');
 		let c = params.capabilities;
@@ -435,6 +440,8 @@ async function loadLibrary(docUri: string) {
 	}));
 }
 
+let program: ts.Program | undefined = undefined;
+
 async function doValidate(conn: server.IConnection, library: any, document: server.TextDocument): Promise<server.Diagnostic[]> {
 	let uri = document.uri;
 
@@ -459,7 +466,7 @@ async function doValidate(conn: server.IConnection, library: any, document: serv
 
 	let contents = document.getText();
 
-	if (document.languageId === 'vue') contents = getVueContents(contents);
+	if (document.languageId === 'vue') contents = vueParser.parse(contents, 'script', { lang: 'ts' });
 
 	let configFile = settings.configFile || null;
 	let configuration: Configuration | undefined;
@@ -504,7 +511,16 @@ async function doValidate(conn: server.IConnection, library: any, document: serv
 	try { // protect against tslint crashes
 		let linter = getLinterFromLibrary(library);
 		if (isTsLintVersion4(library)) {
-			let tslint = new linter(options);
+			let tslint: tslint.Linter;
+
+			if (settings.typeCheck) {
+				// Linting at compiler level.
+				program = createProgram(document.uri, contents, program);
+				tslint = new linter(options, program);
+			} else {
+				tslint = new linter(options);
+			}
+
 			tslint.lint(fsPath, contents, configuration.linterConfiguration);
 			result = tslint.getResult();
 		}
@@ -533,38 +549,73 @@ async function doValidate(conn: server.IConnection, library: any, document: serv
 	return diagnostics;
 }
 
-function getVueContents(contents: string): string {
-	const rootNode = parse5.parseFragment(contents, { locationInfo: true }) as parse5.AST.Default.DocumentFragment;
-	const vueNodes: parse5.AST.Node[] = rootNode.childNodes;
+/**
+ * Create a program so linting can work with typechecking.
+ */
+function createProgram (updatedFileName: string, updatedContents: string, oldProgram?: ts.Program): ts.Program {
+	const parsed = getParsedTsConfig();
+	const host = ts.createCompilerHost(parsed.options, true);
 
-	// Parse the .vue file tags and find the tag <script lang="ts">...</script>.
-	const vueScript = vueNodes.find((node: parse5.AST.Default.Element) => {
-		if (!('attrs' in node)) return false;  // <-- Some nodes/elements don't have attributes.
+	host.getSourceFile = function getSourceFile(fileName, languageVersion, onError) {
+		let sourceText: string | undefined;
 
-		const isScript = node.nodeName === 'script';
-
-		const isTypeScript = node.attrs.find((attr: parse5.AST.Default.Attribute) => {
-			return attr.name === 'lang' && attr.value === 'ts'
-		}) !== undefined;
-
-		return isScript && isTypeScript;
-	}) as (parse5.AST.Default.Element & parse5.AST.Default.Node) | undefined;
-
-	// Replace everything above script tag with comments (pad the space above with comments).
-	if (vueScript !== undefined) {
-		const vueScriptContent = parse5.serialize(vueScript);
-		const vueScriptLocation = vueScript.__location === undefined ? 0 : vueScript.__location.line;
-
-		let vueScriptPadding = '';
-
-		for (let i = 1; i <= vueScriptLocation; i++) {
-			vueScriptPadding += '//' + (i === vueScriptLocation ? '' : '\r\n');
+		if (updatedFileName && updatedFileName.replace('file://', '') === fileName) {
+			// Get contents from file currently being edited in editor.
+			sourceText = updatedContents;
+		} else {
+			// Get contents from file on file system.
+			sourceText = ts.sys.readFile(fileName);
 		}
 
-		contents = vueScriptPadding + vueScriptContent;
+		return sourceText !== undefined ? ts.createSourceFile(fileName, sourceText, languageVersion) : undefined;
 	}
 
-	return contents;
+	host.fileExists = function fileExists(fileName) {
+		return ts.sys.fileExists(fileName);
+	};
+
+	host.readFile = function readFile(fileName) {
+	return ts.sys.readFile(fileName);
+	};
+
+	host.resolveModuleNames = function (moduleNames, containingFile) {
+        const resolvedModules: ts.ResolvedModule[] = [];
+		for (const moduleName of moduleNames) {
+			// Try to use standard resolution.
+			let result = ts.resolveModuleName(moduleName, containingFile, parsed.options, { fileExists: host.fileExists, readFile: host.readFile });
+			if (result.resolvedModule) {
+				resolvedModules.push(result.resolvedModule);
+			}
+			else {
+				// For non-ts extensions.
+				resolvedModules.push({
+					resolvedFileName: moduleName,
+					extension: '.ts'
+				} as ts.ResolvedModuleFull)
+			}
+		}
+		return resolvedModules;
+	};
+
+
+	const program = ts.createProgram(parsed.fileNames, parsed.options, host, oldProgram);
+
+	return program;
+}
+
+/**
+ * Get the tsconfig.json file and parse it into an object.
+ */
+function getParsedTsConfig(): ts.ParsedCommandLine {
+	const configFile = ts.findConfigFile(workspacePath || '', ts.sys.fileExists);
+
+	// TODO: check for config and parse errors.
+	return ts.parseJsonConfigFileContent(
+		ts.readConfigFile(configFile, ts.sys.readFile).config,
+		ts.sys,
+		path.dirname(configFile),
+		{ noEmit: true }
+	);
 }
 
 /**

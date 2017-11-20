@@ -5,5 +5,6 @@
 	"editor.insertSpaces": false,
 	"editor.tabSize": 4,
 	"typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
-	"editor.formatOnSave": false
+	"editor.formatOnSave": false,
+	"typescript.tsdk": "node_modules/typescript/lib"
 }
