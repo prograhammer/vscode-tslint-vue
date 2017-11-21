@@ -22,7 +22,8 @@ to `ts`:
 }
 
 ```
-*Also, make sure you have a `tsconfig.json` file located at the root of your current project/workspace for the typechecker linting to use.*  
+*This extension assumes you have a `tsconfig.json` file located at the root of your current project/workspace and a folder `src/`
+also located at the root as well (*don't put the tsconfig file inside that src folder*). A future update will soon make this more flexible.*  
 
 3.  This is a fork of [vscode-tslint](https://marketplace.visualstudio.com/items?itemName=eg2.tslint) so you can read more information below or refer to that repo.
 
