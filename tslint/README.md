@@ -2,14 +2,14 @@
 
 VSCode extension for tslint with added support for .vue files (single file component) and compiler/typechecker level linting.
 
-1. For linting to work (in .vue files), you need to ensure your script tag's language attribute is set
+- For linting to work in `.vue` files, you need to ensure your script tag's language attribute is set
 to `ts`: 
 
 ```html
 <script lang="ts">...</script>  
 ```
 
-2. You can turn on linting at the typechecker level by setting the `typeCheck` tslint option to `true` in your settings.json (File > Preferences > Settings - Workspace):
+- You can turn on linting at the typechecker level by setting the `typeCheck` tslint option to `true` in your settings.json (File > Preferences > Settings - Workspace):
 
 ```json
 // .vscode/settings.json
@@ -22,10 +22,9 @@ to `ts`:
 }
 
 ```
-*This extension assumes you have a `tsconfig.json` file located at the root of your current project/workspace and a folder `src/`
-also located at the root as well (*don't put the tsconfig file inside that src folder*). A future update will soon make this more flexible.*  
+*This extension assumes you have a `tsconfig.json` file located at the root of your current project/workspace. A future update will soon make this more flexible.*  
 
-3.  This is a fork of [vscode-tslint](https://marketplace.visualstudio.com/items?itemName=eg2.tslint) so you can read more information below or refer to that repo.
+- This is a fork of [vscode-tslint](https://marketplace.visualstudio.com/items?itemName=eg2.tslint) so you can read more information below or refer to that repo. Soon I will update this code to fork from the newer, improved extension TSLint (vnext) [vscode-ts-tslint](https://marketplace.visualstudio.com/items?itemName=eg2.ts-tslint).
 
 # vscode-tslint
 Integrates the [tslint](https://github.com/palantir/tslint) linter for the TypeScript language into VS Code.

@@ -6,7 +6,7 @@ VSCode extension for tslint with added support for .vue (single file component) 
 
 ![Important](vscode-tslint-vue.gif "vscode-tslint-vue screencapture")
 
-1. For linting to work, you need to ensure your script tag's language attribute is set
+1. For linting to work in `.vue` files, you need to ensure your script tag's language attribute is set
 to "ts": `<script lang="ts">...</script>`.  
 2. You can turn on linting at the typechecker level by setting the `typeCheck` tslint option to `true` in your settings.json (File > Preferences > Settings - Workspace):
 

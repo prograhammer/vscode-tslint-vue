@@ -557,8 +557,6 @@ function createProgram (updatedFileName: string, updatedContents: string, oldPro
     const host = ts.createCompilerHost(parsed.options, true);
 
     host.getSourceFile = function getSourceFile(fileName, languageVersion, onError) {
-        if (path.extname(fileName) === '.vue') fileName = path.resolve(workspacePath + 'src/', fileName.replace('@/', 'src/'));
-
         let sourceText: string | undefined;
 
         if (updatedFileName && updatedFileName.replace('file://', '') === fileName) {
@@ -573,27 +571,16 @@ function createProgram (updatedFileName: string, updatedContents: string, oldPro
     }
 
     host.fileExists = function fileExists(fileName) {
-        if (path.extname(fileName) === '.vue') fileName = path.resolve(workspacePath + 'src/', fileName.replace('@/', 'src/'));
         return ts.sys.fileExists(fileName);
     };
 
     host.readFile = function readFile(fileName) {
-        if (path.extname(fileName) === '.vue') fileName = path.resolve(workspacePath + 'src/', fileName.replace('@/', 'src/'));
         return ts.sys.readFile(fileName);
     };
 
     host.resolveModuleNames = function (moduleNames, containingFile) {
-        if (path.extname(containingFile) === '.vue') containingFile = path.resolve(workspacePath + 'src/', containingFile.replace('@/', 'src/'));
-
         const resolvedModules: ts.ResolvedModule[] = [];
         for (let moduleName of moduleNames) {
-            if (path.extname(moduleName) === '.vue') {
-                moduleName = moduleName.search('@/') !== -1
-                    ? moduleName.replace('@/', 'src/')
-                    : 'src/' + moduleName
-                moduleName = path.resolve(workspacePath + '/', moduleName);
-            }
-
             // Try to use standard resolution.
             let result = ts.resolveModuleName(moduleName, containingFile, parsed.options, { fileExists: host.fileExists, readFile: host.readFile });
             if (result.resolvedModule) {
@@ -610,7 +597,7 @@ function createProgram (updatedFileName: string, updatedContents: string, oldPro
         return resolvedModules;
     };
 
-
+    parsed.options.allowNonTsExtensions = true;
     const program = ts.createProgram(parsed.fileNames, parsed.options, host, oldProgram);
 
     return program;
@@ -622,12 +609,31 @@ function createProgram (updatedFileName: string, updatedContents: string, oldPro
 function getParsedTsConfig(): ts.ParsedCommandLine {
     const configFile = ts.findConfigFile(workspacePath || '', ts.sys.fileExists);
 
+    const extensions: ts.JsFileExtensionInfo = {
+        extension: '.vue',
+        isMixedContent: true,
+        scriptKind: ts.ScriptKind.TS
+    };
+
+    const parseConfigHost: ts.ParseConfigHost = {
+        fileExists: ts.sys.fileExists,
+        readFile: ts.sys.readFile,
+        useCaseSensitiveFileNames: ts.sys.useCaseSensitiveFileNames,
+        readDirectory: (rootDir, extensions, excludes, includes, depth) => {
+            const moreExtensions = extensions.concat(['.vue']);
+            return ts.sys.readDirectory(rootDir, moreExtensions, excludes, includes, depth);
+        }
+    };
+
     // TODO: check for config and parse errors.
     return ts.parseJsonConfigFileContent(
         ts.readConfigFile(configFile, ts.sys.readFile).config,
-        ts.sys,
+        parseConfigHost,
         path.dirname(configFile),
-        { noEmit: true }
+        { noEmit: true },
+        undefined,
+        undefined,
+        [extensions]
     );
 }
 
