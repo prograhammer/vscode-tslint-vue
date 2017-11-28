@@ -22,7 +22,7 @@ to `ts`:
 }
 
 ```
-*This extension assumes you have a `tsconfig.json` file located at the root of your current project/workspace. A future update will soon make this more flexible.*  
+*This extension assumes you have a `tsconfig.json` file located at the root of your current project/workspace. A future update will soon make this more flexible. The wildcard `@` is assumed to point to your `[project]/src` folder.*  
 
 - This is a fork of [vscode-tslint](https://marketplace.visualstudio.com/items?itemName=eg2.tslint) so you can read more information below or refer to that repo. Soon I will update this code to fork from the newer, improved extension TSLint (vnext) [vscode-ts-tslint](https://marketplace.visualstudio.com/items?itemName=eg2.ts-tslint).
 

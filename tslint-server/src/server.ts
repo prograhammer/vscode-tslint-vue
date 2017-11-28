@@ -466,7 +466,7 @@ async function doValidate(conn: server.IConnection, library: any, document: serv
 
     let contents = document.getText();
 
-    if (document.languageId === 'vue') contents = vueParser.parse(contents, 'script', { lang: 'ts' });
+    if (document.languageId === 'vue') contents = vueParser.parse(contents, 'script', { lang: ['ts', 'tsx'] });
 
     let configFile = settings.configFile || null;
     let configuration: Configuration | undefined;
@@ -555,16 +555,23 @@ async function doValidate(conn: server.IConnection, library: any, document: serv
 function createProgram (updatedFileName: string, updatedContents: string, oldProgram?: ts.Program): ts.Program {
     const parsed = getParsedTsConfig();
     const host = ts.createCompilerHost(parsed.options, true);
+    updatedFileName = fixSlashes(updatedFileName);
 
     host.getSourceFile = function getSourceFile(fileName, languageVersion, onError) {
         let sourceText: string | undefined;
 
-        if (updatedFileName && updatedFileName.replace('file://', '') === fileName) {
+        console.log('FILES FIX: ' + updatedFileName + ' ' + fixSlashes(fileName));
+        if (updatedFileName && updatedFileName.indexOf(fixSlashes(fileName)) !== -1) {
             // Get contents from file currently being edited in editor.
             sourceText = updatedContents;
         } else {
             // Get contents from file on file system.
             sourceText = ts.sys.readFile(fileName);
+        }
+
+        if (sourceText === undefined) {
+            console.log('filename: ' + fileName);
+            console.log('undefined!!!!!!!!!!');
         }
 
         return sourceText !== undefined ? ts.createSourceFile(fileName, sourceText, languageVersion) : undefined;
@@ -589,7 +596,7 @@ function createProgram (updatedFileName: string, updatedContents: string, oldPro
             else {
                 // For non-ts extensions.
                 resolvedModules.push({
-                    resolvedFileName: moduleName,
+                    resolvedFileName: resolveNonTsModuleName(moduleName, containingFile),
                     extension: '.ts'
                 } as ts.ResolvedModuleFull)
             }
@@ -597,10 +604,38 @@ function createProgram (updatedFileName: string, updatedContents: string, oldPro
         return resolvedModules;
     };
 
-    parsed.options.allowNonTsExtensions = true;
-    const program = ts.createProgram(parsed.fileNames, parsed.options, host, oldProgram);
+    return ts.createProgram(parsed.fileNames, parsed.options, host, oldProgram);
+}
 
-    return program;
+/**
+ * Normalizes slashes (win32 vs. Posix).
+ */
+function fixSlashes(path: string): string {
+    return path.replace(/\\/g, "/");
+}
+
+/**
+ * Fixes a non .ts module's name so the file and source text can be properly found later.
+ * Assumes wildcard "@" is [project root]/src.
+ */
+function resolveNonTsModuleName(moduleName: string, containingFile: string): string {
+    console.log('containing file: ' + containingFile);
+    console.log('module before: ' + moduleName);
+
+    if (moduleName.indexOf('@/') === 0) {
+        moduleName = (workspacePath || '') + '/src' + moduleName.substr(1);
+        console.log('module wildcard: ' + moduleName);
+    }
+    else if (moduleName.indexOf('./') === 0) {
+        moduleName = path.dirname(containingFile) + moduleName.substr(1);
+        console.log('module relative1: ' + moduleName);
+    }
+    else if (moduleName.indexOf('../') === 0) {
+        moduleName = path.resolve(path.dirname(containingFile), moduleName);
+        console.log('module relative2: ' + moduleName);
+    }
+
+    return moduleName;
 }
 
 /**
@@ -609,32 +644,29 @@ function createProgram (updatedFileName: string, updatedContents: string, oldPro
 function getParsedTsConfig(): ts.ParsedCommandLine {
     const configFile = ts.findConfigFile(workspacePath || '', ts.sys.fileExists);
 
-    const extensions: ts.JsFileExtensionInfo = {
-        extension: '.vue',
-        isMixedContent: true,
-        scriptKind: ts.ScriptKind.TS
-    };
+    // Add .vue to list of extensions to read files from.
+    const extraExtensions = ['vue'];
 
     const parseConfigHost: ts.ParseConfigHost = {
         fileExists: ts.sys.fileExists,
         readFile: ts.sys.readFile,
         useCaseSensitiveFileNames: ts.sys.useCaseSensitiveFileNames,
         readDirectory: (rootDir, extensions, excludes, includes, depth) => {
-            const moreExtensions = extensions.concat(['.vue']);
-            return ts.sys.readDirectory(rootDir, moreExtensions, excludes, includes, depth);
+            return ts.sys.readDirectory(rootDir, extensions.concat(extraExtensions), excludes, includes, depth);
         }
     };
 
     // TODO: check for config and parse errors.
-    return ts.parseJsonConfigFileContent(
+    const parsed = ts.parseJsonConfigFileContent(
         ts.readConfigFile(configFile, ts.sys.readFile).config,
         parseConfigHost,
         path.dirname(configFile),
-        { noEmit: true },
-        undefined,
-        undefined,
-        [extensions]
+        { noEmit: true }
     );
+
+    parsed.options.allowNonTsExtensions = true;
+
+    return parsed;
 }
 
 /**

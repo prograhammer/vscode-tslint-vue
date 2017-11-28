@@ -1,3 +1,8 @@
+## 1.3.5
+- Add ability to parse `lang = "tsx"`.
+- Bug fixes for Windows paths.
+- Misc. module resolution fixes.
+
 ## 1.3.0
 - Bug fix: `.vue` files were only linting if referenced in an import chain that leads back up to a `.ts` file. All `.vue` files now lint.
 - Removed restriction for having a `src/` folder. However, tsconfig.json still needs to be in project/workspace root.
