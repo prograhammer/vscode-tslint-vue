@@ -1,3 +1,6 @@
+# 1.3.7
+- Bug fix encode problem with Windows paths.
+
 ## 1.3.6
 - Bug fix internationalization encoding of paths.
 

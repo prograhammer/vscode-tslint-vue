@@ -2,7 +2,7 @@
 
 ![Marketplace Version](http://vsmarketplacebadge.apphb.com/version/prograhammer.tslint-vue.svg "Current Version") ![Market Place Installs](http://vsmarketplacebadge.apphb.com/installs/prograhammer.tslint-vue.svg "Number of Installs")
 
-VSCode extension for tslint with added support for .vue (single file component) files and compiler/typechecker level linting.
+[VSCode extension](https://marketplace.visualstudio.com/items?itemName=prograhammer.tslint-vue) for [tslint](https://github.com/palantir/tslint) with added support for .vue (single file component) files and compiler/typechecker level linting.
 
 ![Important](vscode-tslint-vue.gif "vscode-tslint-vue screencapture")
 

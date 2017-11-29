@@ -560,8 +560,8 @@ function createProgram (updatedFileName: string, updatedContents: string, oldPro
     host.getSourceFile = function getSourceFile(fileName, languageVersion, onError) {
         let sourceText: string | undefined;
 
-        console.log('FILES FIX: ' + updatedFileName + ' ' + fixSlashes(encodeURI(fileName)));
-        if (updatedFileName && updatedFileName.indexOf(fixSlashes(encodeURI(fileName))) !== -1) {
+        console.log('FILES FIX: ' + updatedFileName + ' ' + fixSlashes(encodePath(fileName)));
+        if (updatedFileName && updatedFileName.indexOf(fixSlashes(encodePath(fileName))) !== -1) {
             // Get contents from file currently being edited in editor.
             sourceText = updatedContents;
         } else {
@@ -612,6 +612,13 @@ function createProgram (updatedFileName: string, updatedContents: string, oldPro
  */
 function fixSlashes(path: string): string {
     return path.replace(/\\/g, "/");
+}
+
+/**
+ * Encode path (and fix semicolon issue with Windows paths).
+ */
+function encodePath(path: string): string {
+    return encodeURI(path).replace(/:/g, "%3A");
 }
 
 /**
