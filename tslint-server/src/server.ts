@@ -560,8 +560,8 @@ function createProgram (updatedFileName: string, updatedContents: string, oldPro
     host.getSourceFile = function getSourceFile(fileName, languageVersion, onError) {
         let sourceText: string | undefined;
 
-        console.log('FILES FIX: ' + updatedFileName + ' ' + fixSlashes(fileName));
-        if (updatedFileName && updatedFileName.indexOf(fixSlashes(fileName)) !== -1) {
+        console.log('FILES FIX: ' + updatedFileName + ' ' + fixSlashes(encodeURI(fileName)));
+        if (updatedFileName && updatedFileName.indexOf(fixSlashes(encodeURI(fileName))) !== -1) {
             // Get contents from file currently being edited in editor.
             sourceText = updatedContents;
         } else {

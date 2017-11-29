@@ -1,6 +1,8 @@
 # vscode-tslint-vue
 
-VSCode extension for tslint with added support for .vue files (single file component) and compiler/typechecker level linting.
+VSCode extension for [tslint](https://github.com/palantir/tslint) with added support for .vue files (single file component) and compiler/typechecker level linting.
+
+# Quick Setup
 
 - For linting to work in `.vue` files, you need to ensure your script tag's language attribute is set
 to `ts`: 
@@ -14,22 +16,43 @@ to `ts`:
 ```json
 // .vscode/settings.json
 {
-	// ...
+  // ...
 
-    "tslint.typeCheck": true, 
+  "tslint.typeCheck": true, 
 
-	// ...
+  // ...
 }
 
 ```
-*This extension assumes you have a `tsconfig.json` file located at the root of your current project/workspace. A future update will soon make this more flexible. The wildcard `@` is assumed to point to your `[project]/src` folder.*  
 
-- This is a fork of [vscode-tslint](https://marketplace.visualstudio.com/items?itemName=eg2.tslint) so you can read more information below or refer to that repo. Soon I will update this code to fork from the newer, improved extension TSLint (vnext) [vscode-ts-tslint](https://marketplace.visualstudio.com/items?itemName=eg2.ts-tslint).
+- This extension assumes you have a `tsconfig.json` file located at the root of your current project/workspace. In your tsconfig file, ensure you don't exclude `.vue` files and also provide the wildcard path alias `@` so that it points to `src`:
 
-# vscode-tslint
-Integrates the [tslint](https://github.com/palantir/tslint) linter for the TypeScript language into VS Code.
+```json
+// tsconfig.json
+{
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.vue"
+  ],
+  "exclude": [
+      "node_modules"
+  ],
+  "compilerOptions": {
+    
+    // ...
 
-Please refer to the tslint [documentation](https://github.com/palantir/tslint) for how to configure the linting rules.
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    }
+  }
+}
+
+```
+
+- This is a fork of [vscode-tslint](https://marketplace.visualstudio.com/items?itemName=eg2.tslint). Soon I will update this code to fork from the newer, improved extension TSLint (vnext) [vscode-ts-tslint](https://marketplace.visualstudio.com/items?itemName=eg2.ts-tslint). Please refer to the tslint [documentation](https://github.com/palantir/tslint) for how to configure the linting rules.
 
 # Prerequisites
 The extension requires that the `tslint` and `typescript` modules are installed either locally or globally. The extension will use the tslint module that is installed closest to the linted file. To install tslint and typescript globally you can run `npm install -g tslint typescript`.

@@ -1,3 +1,6 @@
+## 1.3.6
+- Bug fix internationalization encoding of paths.
+
 ## 1.3.5
 - Add ability to parse `lang = "tsx"`.
 - Bug fixes for Windows paths.
