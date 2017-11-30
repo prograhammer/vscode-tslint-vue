@@ -1,8 +1,11 @@
+# 1.3.8
+- Cleanup some debugging code.
+
 # 1.3.7
-- Bug fix encode problem with Windows paths.
+- Bug fix encode problem with Windows paths. Whole vue file was linting, not just script content.
 
 ## 1.3.6
-- Bug fix internationalization encoding of paths.
+- Bug fix internationalization encoding of paths. International characters broke module resolution.
 
 ## 1.3.5
 - Add ability to parse `lang = "tsx"`.

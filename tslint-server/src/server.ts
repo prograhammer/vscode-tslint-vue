@@ -560,7 +560,6 @@ function createProgram (updatedFileName: string, updatedContents: string, oldPro
     host.getSourceFile = function getSourceFile(fileName, languageVersion, onError) {
         let sourceText: string | undefined;
 
-        console.log('FILES FIX: ' + updatedFileName + ' ' + fixSlashes(encodePath(fileName)));
         if (updatedFileName && updatedFileName.indexOf(fixSlashes(encodePath(fileName))) !== -1) {
             // Get contents from file currently being edited in editor.
             sourceText = updatedContents;
@@ -570,8 +569,7 @@ function createProgram (updatedFileName: string, updatedContents: string, oldPro
         }
 
         if (sourceText === undefined) {
-            console.log('filename: ' + fileName);
-            console.log('undefined!!!!!!!!!!');
+            console.log('File not found: ' + fileName);
         }
 
         return sourceText !== undefined ? ts.createSourceFile(fileName, sourceText, languageVersion) : undefined;
@@ -626,20 +624,14 @@ function encodePath(path: string): string {
  * Assumes wildcard "@" is [project root]/src.
  */
 function resolveNonTsModuleName(moduleName: string, containingFile: string): string {
-    console.log('containing file: ' + containingFile);
-    console.log('module before: ' + moduleName);
-
     if (moduleName.indexOf('@/') === 0) {
         moduleName = (workspacePath || '') + '/src' + moduleName.substr(1);
-        console.log('module wildcard: ' + moduleName);
     }
     else if (moduleName.indexOf('./') === 0) {
         moduleName = path.dirname(containingFile) + moduleName.substr(1);
-        console.log('module relative1: ' + moduleName);
     }
     else if (moduleName.indexOf('../') === 0) {
         moduleName = path.resolve(path.dirname(containingFile), moduleName);
-        console.log('module relative2: ' + moduleName);
     }
 
     return moduleName;
