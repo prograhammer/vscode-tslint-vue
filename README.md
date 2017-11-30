@@ -8,14 +8,14 @@
 
 # Quick Setup
 
-- For linting to work in `.vue` files, you need to ensure your script tag's language attribute is set
+For linting to work in `.vue` files, you need to ensure your script tag's language attribute is set
 to `ts`: 
 
 ```html
 <script lang="ts">...</script>  
 ```
 
-- You can turn on linting at the typechecker level by setting the `typeCheck` tslint option to `true` in your settings.json (File > Preferences > Settings - Workspace):
+You can turn on linting at the typechecker level by setting the `typeCheck` tslint option to `true` in your settings.json (File > Preferences > Settings - Workspace):
 
 ```json
 // .vscode/settings.json
@@ -29,7 +29,7 @@ to `ts`:
 
 ```
 
-- This extension assumes you have a `tsconfig.json` file located at the root of your current project/workspace. In your tsconfig file, ensure you don't exclude `.vue` files and also provide the wildcard path alias `@` so that it points to `src`:
+This extension assumes you have a `tsconfig.json` file located at the root of your current project/workspace. In your tsconfig file, ensure you don't exclude `.vue` files and also provide the wildcard path alias `@` so that it points to `src`:
 
 ```json
 // tsconfig.json

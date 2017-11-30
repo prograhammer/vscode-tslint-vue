@@ -568,9 +568,7 @@ function createProgram (updatedFileName: string, updatedContents: string, oldPro
             sourceText = ts.sys.readFile(fileName);
         }
 
-        if (sourceText === undefined) {
-            console.log('File not found: ' + fileName);
-        }
+        // if (sourceText === undefined) console.log('File not found: ' + fileName);
 
         return sourceText !== undefined ? ts.createSourceFile(fileName, sourceText, languageVersion) : undefined;
     }
