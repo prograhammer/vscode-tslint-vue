@@ -1,3 +1,6 @@
+# 1.4.1
+- Clean up and added README clarification.
+
 # 1.4.0
 - Bug fix: LF worked but CRLF (bottom right status bar) was interfering with error line number.
 - Updated README with more information, including suggestion on Webpack.

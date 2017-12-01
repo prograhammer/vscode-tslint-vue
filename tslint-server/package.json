@@ -11,7 +11,7 @@
     "semver": "^5.1.0",
     "vscode-languageserver": "^3.4.0",
     "vscode-uri": "^1.0.1",
-    "vue-parser": "^1.0.0"
+    "vue-parser": "^1.0.1"
   },
   "devDependencies": {
     "@types/minimatch": "^2.0.29",
