@@ -466,7 +466,10 @@ async function doValidate(conn: server.IConnection, library: any, document: serv
 
     let contents = document.getText();
 
-    if (document.languageId === 'vue') contents = vueParser.parse(contents, 'script', { lang: ['ts', 'tsx'] });
+    if (document.languageId === 'vue') {
+        contents = contents.replace(/\r\n/g, '\n'); // <-- @TODO Quick fix for CRLF.
+        contents = vueParser.parse(contents, 'script', { lang: ['ts', 'tsx'] });
+    }
 
     let configFile = settings.configFile || null;
     let configuration: Configuration | undefined;

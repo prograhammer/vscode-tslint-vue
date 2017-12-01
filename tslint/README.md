@@ -1,15 +1,26 @@
 # vscode-tslint-vue
 
-VSCode extension for [tslint](https://github.com/palantir/tslint) with added support for .vue files (single file component) and compiler/typechecker level linting.
+[VSCode extension](https://marketplace.visualstudio.com/items?itemName=prograhammer.tslint-vue) for [tslint](https://github.com/palantir/tslint) with added support for .vue files (single file component) and compiler/typechecker level linting. This is a fork of [vscode-tslint](https://github.com/Microsoft/vscode-tslint).
+
+![Important](vscode-tslint-vue2.gif "vscode-tslint-vue screencapture")
 
 # Quick Setup
 
+### Set Script lang
+
 For linting to work in `.vue` files, you need to ensure your script tag's language attribute is set
-to `ts`: 
+to `ts` or `tsx` (also make sure you include the `.vue` extension in all your import statements as shown below): 
 
 ```html
-<script lang="ts">...</script>  
+<script lang="ts">
+import Hello from '@/components/hello.vue'
+
+// ...
+
+</script>
 ```
+
+### Enable typeCheck
 
 You can turn on linting at the typechecker level by setting the `typeCheck` tslint option to `true` in your settings.json (File > Preferences > Settings - Workspace):
 
@@ -24,6 +35,8 @@ You can turn on linting at the typechecker level by setting the `typeCheck` tsli
 }
 
 ```
+
+### Setup tsconfig.json
 
 This extension assumes you have a `tsconfig.json` file located at the root of your current project/workspace. In your tsconfig file, ensure you don't exclude `.vue` files and also provide the wildcard path alias `@` so that it points to `src`:
 
@@ -52,26 +65,52 @@ This extension assumes you have a `tsconfig.json` file located at the root of yo
 
 ```
 
-- This is a fork of [vscode-tslint](https://marketplace.visualstudio.com/items?itemName=eg2.tslint). Soon I will update this code to fork from the newer, improved extension TSLint (vnext) [vscode-ts-tslint](https://marketplace.visualstudio.com/items?itemName=eg2.ts-tslint). Please refer to the tslint [documentation](https://github.com/palantir/tslint) for how to configure the linting rules.
+### Setup tslint.json
 
-# Prerequisites
-The extension requires that the `tslint` and `typescript` modules are installed either locally or globally. The extension will use the tslint module that is installed closest to the linted file. To install tslint and typescript globally you can run `npm install -g tslint typescript`.
+Add a `tslint.json` file. For a quick set of rules you can use the [Javascript Standard Style](https://standardjs.com/rules.html)
+with `npm install tslint-config-standard --save-dev` and add it to the `extends` section as shown below:
+
+```json
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint-config-standard" // <-- Don't forget to npm install this package.
+    ],    
+    "jsRules": {},
+    "rules": {},
+    "rulesDirectory": []
+}
+
+```
+
+### Webpack
+
+If you are using Webpack you will mostly likely need a way to perform linting in your build process as well. Check out the 
+fast `fork-ts-checker-webpack-plugin` (which works with ts-loader set to transpileOnly) where I currently have a pull-request for adding 
+Vue functionality. You can try it out early and read more at this [issue here](https://github.com/Realytics/fork-ts-checker-webpack-plugin/issues/70).
+
+### VNext
+
+- This is a fork of [vscode-tslint](https://marketplace.visualstudio.com/items?itemName=eg2.tslint) so you can find more information there. Soon 
+I will update this code to fork from the newer, improved extension TSLint (vnext) [vscode-ts-tslint](https://marketplace.visualstudio.com/items?itemName=eg2.ts-tslint). Please refer to the tslint [documentation](https://github.com/palantir/tslint) for how to configure the linting rules.
+
+### Prerequisites
+The extension requires that the `tslint` and `typescript` modules are installed either locally or globally. The extension will use the tslint module that is installed closest to the linted file. You can switch 
+the typescript version at the bottom right of the status bar to use the workspace/local version (will update your settings.json). 
+To install tslint and typescript globally you can run `npm install -g tslint typescript`
 
 # FAQ
 
-- The `no-unused-variable` rule doesn't report warnings any more?
-
-Since tslint version 5 the rule [no-unused-variable](https://palantir.github.io/tslint/rules/no-unused-variable/) rule requires type information. Rules with type information are currently not supported by vscode-tslint, pls see [issue #70](https://github.com/Microsoft/vscode-tslint/issues/70#issuecomment-241041929). The recommended work around is to enable the TypeScript compiler options `noUnusedLocals` and `noUnusedParameters` in your `tsconfig.json` file.
-
 - How can I use tslint rules that require type information
 
-The recommended way is to run tslint manually on your project from a [task](https://code.visualstudio.com/docs/editor/tasks). To see the lint warnings in the Problems panel you can associate the task with a [Problem matcher](https://code.visualstudio.com/docs/editor/tasks#_processing-task-output-with-problem-matchers) as described in the section [below](#Using-the-extension-with-tasks-running-tslint).
+Turn on typecheck in your VSCode settings.json (File > Preferences > Settings): `"tslint.typeCheck": true`.
 
 - Linting does not seem to work what can I do?
 
-Click on the `TSlint` status bar item at the bottom left of the status bar to see the output from the vscode-tslint extension.
+Click on the `TSlint` status bar item at the bottom left of the status bar to see the output from the vscode-tslint-vue extension.
 You can enable more tracing output by adding the setting "tslint.trace.server" with a value of "verbose" or "messages". If this doesn't
-help then please file an [issue](https://github.com/Microsoft/vscode-tslint/issues/new) and include the trace output produced when running with the setting "tslint.trace.server" set to "verbose".
+help then please file an [issue](https://github.com/Microsoft/vscode-tslint-vue/issues/new) and include the trace output produced when running with the setting "tslint.trace.server" set to "verbose". This is a fork of [vscode-tslint](https://github.com/Microsoft/vscode-tslint) so the issue may be need 
+to be resolved their.
 
 # Configuration options
 
@@ -88,6 +127,7 @@ help then please file an [issue](https://github.com/Microsoft/vscode-tslint/issu
 - `tslint.nodePath` - custom path to node modules directory, used to load tslint from a different location than the default of the current workspace or the global node modules directory.
 - `tslint.autoFixOnSave` - fix auto-fixable warnings when a file is saved. **Note:** Auto-fixing is only done when manually saving a file. It is not performed when the file is automatically saved based on the `files.autoSave` setting. Executing a manual save on an already-saved document will trigger auto-fixing.
 - `tslint.alwaysShowRuleFailuresAsWarnings` - always show rule failures as warnings, ignoring the severity configuration in the `tslint.json` configuration.
+- `tslint.typeCheck` - turns on linting at the type checker level (ie. a rule such as no-unused-variable).
 
 # Auto-fixing
 
@@ -128,53 +168,4 @@ You can easily overwrite the value of these attributes. The following examples o
     "fileLocation": "relative"
 }
 ```
-
-See the next section for an example.
-
-# Using the extension with tasks running tslint
-
-The extension lints an individual file only. If you want to lint your entire workspace or project and want to see
-the warnings in the `Problems` panel, then you can:
-- use gulp that or define a script inside the `package.json` that runs tslint across your project.
-- define a VS Code [task](https://code.visualstudio.com/docs/editor/tasks) with a [problem matcher](https://code.visualstudio.com/docs/editor/tasks#_processing-task-output-with-problem-matchers)
-that extracts VS Code warnings from the tslint output.
-
-For example, here is an excerpt from a package.json file that defines a script to run tslint:
-
-```json
-{
-  "name": "tslint-script-demo",
-  "version": "1.0.0",
-  "scripts": {
-    "lint": "tslint tests/*.ts -t verbose"
-  },
-  "devDependencies": {
-    "typescript": "^2.2.2",
-    "tslint": "^5.0.0"
-  }
-}
-
-```
-
-Next, define a Task which runs the npm script with a problem matcher that extracts the tslint errors into warnings.
-
-```json
-{
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "type": "npm",
-            "script": "lint",
-            "problemMatcher": {
-                "base": "$tslint5",
-                "fileLocation": "relative"
-            }
-        }
-    ]
-}
-```
-
-Finally, when you then run the `tslint` task you will see the warnings produced by the npm script in the `Problems` panel and you can navigate to the errors from there.
-
-Here is the complete setup [example setup](https://github.com/Microsoft/vscode-tslint/tree/master/tslint-tests).
 
