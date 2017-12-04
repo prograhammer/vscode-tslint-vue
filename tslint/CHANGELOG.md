@@ -1,3 +1,6 @@
+# 1.4.2
+- Announce upcoming big release/fix. Update README.
+
 # 1.4.1
 - Clean up and added README clarification.
 

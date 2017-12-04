@@ -2,7 +2,7 @@
 
 [VSCode extension](https://marketplace.visualstudio.com/items?itemName=prograhammer.tslint-vue) for [tslint](https://github.com/palantir/tslint) with added support for .vue files (single file component) and compiler/typechecker level linting. This is a fork of [vscode-tslint](https://github.com/Microsoft/vscode-tslint).
 
-*Note: See Quick Setup section further down for turning `typeCheck` on...*
+*Note: See Quick Setup section further down for **new details** on turning `typeCheck` on...*
 
 ![Important](vscode-tslint-vue2.gif "vscode-tslint-vue screencapture")
 
@@ -37,6 +37,23 @@ You can turn on linting at the typechecker level by setting the `typeCheck` tsli
 }
 
 ```
+**Important**: Importing vue modules (ie. `import Hello from 'Hello.vue'`) will work fully within other .vue files (type information is retrieved) 
+without the need for a wildcard declaration. However, `.ts` modules that import `.vue` modules still require the wildcard declaration file:
+
+```
+// sfc.d.ts
+declare module "*.vue" {
+    import Vue from "vue"  // <-- this is not ideal, v2.0.0 will fix this!
+    export default Vue
+}
+
+```
+The above will give the type as `vue` which is not ideal and defeats the purpose of TypeScript (your Vue modules extend Vue with more type information 
+that you have added on your module).
+ I've found a solution to this and I'm currently working on preparing it for **a 2.0.0 release** where the wildcard definition will no longer
+be needed and type information from the module **will fully work!** Star the github repo 
+and watch this issue: https://github.com/prograhammer/vscode-tslint-vue/issues/4. In the meantime, you can double check yourself using the 
+Webpack plugin `fork-ts-checker-webpack-plugin`. See Webpack section further down below.
 
 ### Setup tsconfig.json
 
@@ -93,7 +110,8 @@ Vue functionality. You can try it out early and read more at this [issue here](h
 
 ### VNext
 
-- This is a fork of [vscode-tslint](https://marketplace.visualstudio.com/items?itemName=eg2.tslint) so you can find more information there. Soon 
+This is a fork of [vscode-tslint](https://marketplace.visualstudio.com/items?itemName=eg2.tslint) so you can find more information there. In upcoming 
+v2.0.0 release  
 I will update this code to fork from the newer, improved extension TSLint (vnext) [vscode-ts-tslint](https://marketplace.visualstudio.com/items?itemName=eg2.ts-tslint). Please refer to the tslint [documentation](https://github.com/palantir/tslint) for how to configure the linting rules.
 
 ### Prerequisites
@@ -103,13 +121,13 @@ To install tslint and typescript globally you can run `npm install -g tslint typ
 
 # FAQ
 
-- How can I use tslint rules that require type information
+How can I use tslint rules that require type information?
 
-Turn on typecheck in your VSCode settings.json (File > Preferences > Settings): `"tslint.typeCheck": true`.
+- Turn on typecheck in your VSCode settings.json (File > Preferences > Settings): `"tslint.typeCheck": true`.
 
-- Linting does not seem to work what can I do?
+Linting does not seem to work what can I do?
 
-Click on the `TSlint` status bar item at the bottom left of the status bar to see the output from the vscode-tslint-vue extension.
+- Click on the `TSlint` status bar item at the bottom left of the status bar to see the output from the vscode-tslint-vue extension.
 You can enable more tracing output by adding the setting "tslint.trace.server" with a value of "verbose" or "messages". If this doesn't
 help then please file an [issue](https://github.com/Microsoft/vscode-tslint-vue/issues/new) and include the trace output produced when running with the setting "tslint.trace.server" set to "verbose". This is a fork of [vscode-tslint](https://github.com/Microsoft/vscode-tslint) so the issue may be need 
 to be resolved their.
