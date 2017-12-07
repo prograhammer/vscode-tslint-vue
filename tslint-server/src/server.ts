@@ -555,37 +555,26 @@ async function doValidate(conn: server.IConnection, library: any, document: serv
 function createProgram (updatedFileName: string, updatedContents: string, oldProgram?: ts.Program): ts.Program {
     const parsed = getParsedTsConfig();
     const host = ts.createCompilerHost(parsed.options, true);
+    const realGetSourceFile = host.getSourceFile;
     updatedFileName = fixSlashes(updatedFileName);
 
     host.getSourceFile = function getSourceFile(fileName, languageVersion, onError) {
-        let sourceText: string | undefined;
-
         if (updatedFileName && updatedFileName.indexOf(fixSlashes(encodePath(fileName))) !== -1) {
             // Get contents from file currently being edited in editor.
-            sourceText = updatedContents;
+            return ts.createSourceFile(fileName, updatedContents, languageVersion, true);
         } else {
-            // Get contents from file on file system.
-            sourceText = ts.sys.readFile(fileName);
+            return realGetSourceFile(fileName, languageVersion, onError);
         }
-
-        // if (sourceText === undefined) console.log('File not found: ' + fileName);
-
-        return sourceText !== undefined ? ts.createSourceFile(fileName, sourceText, languageVersion) : undefined;
     }
-
-    host.fileExists = function fileExists(fileName) {
-        return ts.sys.fileExists(fileName);
-    };
-
-    host.readFile = function readFile(fileName) {
-        return ts.sys.readFile(fileName);
-    };
 
     host.resolveModuleNames = function (moduleNames, containingFile) {
         const resolvedModules: ts.ResolvedModule[] = [];
         for (let moduleName of moduleNames) {
             // Try to use standard resolution.
-            let result = ts.resolveModuleName(moduleName, containingFile, parsed.options, { fileExists: host.fileExists, readFile: host.readFile });
+            let result = ts.resolveModuleName(moduleName, containingFile, parsed.options, {
+                fileExists: host.fileExists, readFile: host.readFile
+            });
+
             if (result.resolvedModule) {
                 resolvedModules.push(result.resolvedModule);
             }
@@ -619,16 +608,13 @@ function encodePath(path: string): string {
 
 /**
  * Fixes a non .ts module's name so the file and source text can be properly found later.
- * Assumes wildcard "@" is [project root]/src.
+ * Assumes wildcard "@" is [workspace root]/src.
  */
 function resolveNonTsModuleName(moduleName: string, containingFile: string): string {
     if (moduleName.indexOf('@/') === 0) {
-        moduleName = (workspacePath || '') + '/src' + moduleName.substr(1);
+        moduleName = path.resolve(workspacePath || '', '/src' + moduleName.substr(1));
     }
-    else if (moduleName.indexOf('./') === 0) {
-        moduleName = path.dirname(containingFile) + moduleName.substr(1);
-    }
-    else if (moduleName.indexOf('../') === 0) {
+    else if (moduleName.indexOf('./') === 0 || moduleName.indexOf('../') === 0) {
         moduleName = path.resolve(path.dirname(containingFile), moduleName);
     }
 

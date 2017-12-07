@@ -19,8 +19,8 @@
     "@types/node": "^6.0.41",
     "@types/semver": "^5.3.30",
     "mocha": "^3.3.0",
-    "tslint": "^5.0.0",
-    "typescript": "^2.0.3"
+    "tslint": "^5.8.0",
+    "typescript": "^2.6.2"
   },
   "scripts": {
     "compile": "installServerIntoExtension ../tslint ./package.json ./src/tsconfig.json && tsc -p ./src",
