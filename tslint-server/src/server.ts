@@ -556,10 +556,10 @@ function createProgram (updatedFileName: string, updatedContents: string, oldPro
     const parsed = getParsedTsConfig();
     const host = ts.createCompilerHost(parsed.options, true);
     const realGetSourceFile = host.getSourceFile;
-    updatedFileName = fixSlashes(updatedFileName);
+    updatedFileName = toUnixPath(updatedFileName);
 
     host.getSourceFile = function getSourceFile(fileName, languageVersion, onError) {
-        if (updatedFileName && updatedFileName.indexOf(fixSlashes(encodePath(fileName))) !== -1) {
+        if (updatedFileName && updatedFileName.indexOf(fixSlashes(encodePath(toUnixPath(fileName)))) !== -1) {
             // Get contents from file currently being edited in editor.
             return ts.createSourceFile(fileName, updatedContents, languageVersion, true);
         } else {
@@ -593,17 +593,22 @@ function createProgram (updatedFileName: string, updatedContents: string, oldPro
 }
 
 /**
- * Normalizes slashes (win32 vs. Posix).
- */
-function fixSlashes(path: string): string {
-    return path.replace(/\\/g, "/");
-}
-
-/**
  * Encode path (and fix semicolon issue with Windows paths).
  */
 function encodePath(path: string): string {
     return encodeURI(path).replace(/:/g, "%3A");
+}
+
+/**
+ * Rewrite windows path to unix style path
+ */
+function toUnixPath(p: string): string {
+	p = p.replace(/\\/g, '/');
+	let double = /\/\//;
+	while(p.match(double)) {
+		p = p.replace(double, '');
+	}
+	return p;
 }
 
 /**
