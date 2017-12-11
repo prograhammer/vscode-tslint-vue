@@ -559,7 +559,7 @@ function createProgram (updatedFileName: string, updatedContents: string, oldPro
     updatedFileName = toUnixPath(updatedFileName);
 
     host.getSourceFile = function getSourceFile(fileName, languageVersion, onError) {
-        if (updatedFileName && updatedFileName.indexOf(fixSlashes(encodePath(toUnixPath(fileName)))) !== -1) {
+        if (updatedFileName && updatedFileName.indexOf(encodePath(toUnixPath(fileName))) !== -1) {
             // Get contents from file currently being edited in editor.
             return ts.createSourceFile(fileName, updatedContents, languageVersion, true);
         } else {
