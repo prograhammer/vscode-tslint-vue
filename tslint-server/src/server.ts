@@ -466,7 +466,7 @@ async function doValidate(conn: server.IConnection, library: any, document: serv
 
     let contents = document.getText();
 
-    if (document.languageId === 'vue') contents = vueParser.parse(contents, 'script', { lang: ['ts', 'tsx'] });
+    if (document.languageId === 'vue') contents = vueParser.parse(contents, 'script', { lang: ['ts', 'tsx', 'js', 'jsx'] });
 
     let configFile = settings.configFile || null;
     let configuration: Configuration | undefined;
@@ -562,7 +562,12 @@ function createProgram (updatedFileName: string, updatedContents: string, oldPro
         if (updatedFileName && updatedFileName.indexOf(fixSlashes(encodePath(fileName))) !== -1) {
             // Get contents from file currently being edited in editor.
             return ts.createSourceFile(fileName, updatedContents, languageVersion, true);
-        } else {
+        } else if (fileName.substr(-4) === '.vue') {
+            const sourceText = host.readFile(fileName) || '';
+            const parsed = vueParser.parse(sourceText, 'script', { lang: ['ts', 'tsx', 'js', 'jsx'] });
+            return ts.createSourceFile(fileName, parsed, languageVersion, true);
+        }
+        else {
             return realGetSourceFile(fileName, languageVersion, onError);
         }
     }
@@ -612,7 +617,7 @@ function encodePath(path: string): string {
  */
 function resolveNonTsModuleName(moduleName: string, containingFile: string): string {
     if (moduleName.indexOf('@/') === 0) {
-        moduleName = path.resolve(workspacePath || '', '/src' + moduleName.substr(1));
+        moduleName = path.resolve(workspacePath || '', 'src' + moduleName.substr(1));
     }
     else if (moduleName.indexOf('./') === 0 || moduleName.indexOf('../') === 0) {
         moduleName = path.resolve(path.dirname(containingFile), moduleName);

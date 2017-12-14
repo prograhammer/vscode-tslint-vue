@@ -1,3 +1,6 @@
+# 1.5.1
+- Fixed regression bug where some sourcefiles not being readapplied.
+
 # 1.5.0
 - Fixed bug [#6](https://github.com/prograhammer/vscode-tslint-vue/issues/6) where rules in config were not applied.
 - Updated to TypeScript v2.6.2
