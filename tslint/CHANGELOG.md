@@ -1,5 +1,8 @@
+# 1.5.2
+- Fixed autofix and line/character count issues. Thanks @Altaflux
+
 # 1.5.1
-- Fixed regression bug where some sourcefiles not being readapplied.
+- Fixed regression bug where some sourcefiles not being read.
 
 # 1.5.0
 - Fixed bug [#6](https://github.com/prograhammer/vscode-tslint-vue/issues/6) where rules in config were not applied.
