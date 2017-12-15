@@ -1,3 +1,6 @@
+# 1.5.3
+- Fixed [#9](https://github.com/prograhammer/vscode-tslint-vue/issues/9) so parsed out section rules are disabled.
+
 # 1.5.2
 - Fixed autofix and line/character count issues. Thanks @Altaflux
 
