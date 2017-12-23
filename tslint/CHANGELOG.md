@@ -1,3 +1,6 @@
+# 1.5.5
+- Fixed parsing bug where non-ts Vue files would break compiling when modified.
+
 # 1.5.3
 - Fixed [#9](https://github.com/prograhammer/vscode-tslint-vue/issues/9) so parsed out section rules are disabled.
 
