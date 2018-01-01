@@ -562,7 +562,7 @@ function createProgram (updatedFileName: string, updatedContents: string, oldPro
         if (updatedFileName && updatedFileName.indexOf(fixSlashes(encodePath(fileName))) !== -1) {
             // Get contents from file currently being edited in editor.
             return ts.createSourceFile(fileName, updatedContents, languageVersion, true);
-        } else if (fileName.substr(-4) === '.vue') {
+        } else if (isVue(fileName)) {
             const sourceText = host.readFile(fileName) || '';
             const parsed = vueParser.parse(sourceText, 'script', { lang: ['ts', 'tsx', 'js', 'jsx'] });
             return ts.createSourceFile(fileName, parsed, languageVersion, true);
@@ -576,19 +576,27 @@ function createProgram (updatedFileName: string, updatedContents: string, oldPro
         const resolvedModules: ts.ResolvedModule[] = [];
         for (let moduleName of moduleNames) {
             // Try to use standard resolution.
-            let result = ts.resolveModuleName(moduleName, containingFile, parsed.options, {
-                fileExists: host.fileExists, readFile: host.readFile
-            });
+            let result = ts.resolveModuleName(moduleName, containingFile, parsed.options, host);
 
             if (result.resolvedModule) {
                 resolvedModules.push(result.resolvedModule);
             }
             else {
                 // For non-ts extensions.
-                resolvedModules.push({
-                    resolvedFileName: resolveNonTsModuleName(moduleName, containingFile),
-                    extension: '.ts'
-                } as ts.ResolvedModuleFull)
+                const absolutePath = resolveNonTsModuleName(moduleName, containingFile);
+
+                if (isVue(moduleName)) {
+                    resolvedModules.push({
+                        resolvedFileName: absolutePath,
+                        extension: '.ts'
+                    } as ts.ResolvedModuleFull);
+                } else {
+                    resolvedModules.push({
+                        // If the file does exist, return an empty string (because we assume user has provided a ".d.ts" file for it).
+                        resolvedFileName: host.fileExists(absolutePath) ? '' : absolutePath,
+                        extension: '.ts'
+                    } as ts.ResolvedModuleFull);
+                }
             }
         }
         return resolvedModules;
@@ -624,6 +632,13 @@ function resolveNonTsModuleName(moduleName: string, containingFile: string): str
     }
 
     return moduleName;
+}
+
+/**
+ * Determines if file is a Vue file.
+ */
+function isVue(filePath: string) {
+    return path.extname(filePath) === '.vue';
 }
 
 /**

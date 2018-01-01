@@ -39,10 +39,10 @@ You can turn on linting at the typechecker level by setting the `typeCheck` tsli
 ```
 
 **Important**: Importing vue modules (ie. `import Hello from 'Hello.vue'`) will work fully within other .vue files (type information is retrieved) 
-without the need for a wildcard declaration. However, `.ts` modules that import `.vue` modules (ie. `main.ts`, `hello.spec.ts`) still require the wildcard declaration file:
+without the need for a declaration file `.d.ts`. However, `.ts` modules that import `.vue` modules (ie. `main.ts`, `hello.spec.ts`) still require a declaration file:
 
 ```
-// sfc.d.ts
+// vue.d.ts
 declare module "*.vue" {
     import Vue from "vue"  // <-- this is not ideal, looking for solution to this in future version.
     export default Vue
@@ -52,7 +52,8 @@ declare module "*.vue" {
 The above will give the type as `vue` which is not ideal and defeats the purpose of TypeScript (your Vue modules extend Vue with more type information 
 that you have added on your module).
  I'm currently looking for a solution to this. In the meantime, you can double check yourself (if you have any places you import vue into ts) using the 
-Webpack plugin `fork-ts-checker-webpack-plugin`. See Webpack section further down below.
+Webpack plugin `fork-ts-checker-webpack-plugin`. See Webpack section further down below. Also remember that you will still need declaration files for 
+any non-ts/non-vue imports otherwise TypeScript does not know how to work with them.
 
 
 ### Setup tsconfig.json

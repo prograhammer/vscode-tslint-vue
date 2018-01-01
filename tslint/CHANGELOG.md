@@ -1,3 +1,6 @@
+# 1.5.6
+- Fixed problem where non-vue imports were not working (even if .d.ts was provided).
+
 # 1.5.5
 - Fixed parsing bug where non-ts Vue files would break compiling when modified.
 
